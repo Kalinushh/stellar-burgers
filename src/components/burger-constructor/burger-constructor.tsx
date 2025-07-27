@@ -6,9 +6,49 @@ export const BurgerConstructor: FC = () => {
   /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
   const constructorItems = {
     bun: {
-      price: 0
+      _id: 'bun123',
+      id: 'local-bun-id',
+      name: 'Булка N',
+      type: 'bun',
+      price: 50,
+      image: 'https://via.placeholder.com/100x40',
+      image_mobile: 'https://via.placeholder.com/50x30',
+      image_large: 'https://via.placeholder.com/200x100',
+      calories: 100,
+      carbohydrates: 10,
+      fat: 5,
+      proteins: 7
     },
-    ingredients: []
+    ingredients: [
+      {
+        _id: 'main456',
+        id: 'local-main-id-1',
+        name: 'Котлета говяжья',
+        type: 'main',
+        price: 80,
+        image: 'https://via.placeholder.com/100x40',
+        image_mobile: 'https://via.placeholder.com/50x30',
+        image_large: 'https://via.placeholder.com/200x100',
+        calories: 150,
+        carbohydrates: 5,
+        fat: 10,
+        proteins: 20
+      },
+      {
+        _id: 'sauce789',
+        id: 'local-sauce-id-1',
+        name: 'Соус острый',
+        type: 'sauce',
+        price: 30,
+        image: 'https://via.placeholder.com/100x40',
+        image_mobile: 'https://via.placeholder.com/50x30',
+        image_large: 'https://via.placeholder.com/200x100',
+        calories: 50,
+        carbohydrates: 2,
+        fat: 4,
+        proteins: 1
+      }
+    ]
   };
 
   const orderRequest = false;
@@ -29,8 +69,6 @@ export const BurgerConstructor: FC = () => {
       ),
     [constructorItems]
   );
-
-  return null;
 
   return (
     <BurgerConstructorUI
