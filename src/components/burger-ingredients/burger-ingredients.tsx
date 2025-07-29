@@ -9,61 +9,14 @@ import {
 import { TTabMode, TIngredient } from '@utils-types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
 
+
 export const BurgerIngredients: FC = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchIngredients());
   }, [dispatch]);
-  /** TODO: взять переменные из стора */
 
-  // const buns: TIngredient[] = [
-  //   {
-  //     _id: 'bun1',
-  //     name: 'Булка N',
-  //     type: 'bun',
-  //     price: 50,
-  //     image: 'https://via.placeholder.com/100x40',
-  //     image_mobile: '',
-  //     image_large: '',
-  //     calories: 100,
-  //     carbohydrates: 20,
-  //     fat: 5,
-  //     proteins: 10
-  //   }
-  // ];
-  //
-  // const mains: TIngredient[] = [
-  //   {
-  //     _id: 'main1',
-  //     name: 'Котлета говяжья',
-  //     type: 'main',
-  //     price: 80,
-  //     image: 'https://via.placeholder.com/100x40',
-  //     image_mobile: '',
-  //     image_large: '',
-  //     calories: 200,
-  //     carbohydrates: 0,
-  //     fat: 15,
-  //     proteins: 25
-  //   }
-  // ];
-  //
-  // const sauces: TIngredient[] = [
-  //   {
-  //     _id: 'sauce1',
-  //     name: 'Соус острый',
-  //     type: 'sauce',
-  //     price: 30,
-  //     image: 'https://via.placeholder.com/100x40',
-  //     image_mobile: '',
-  //     image_large: '',
-  //     calories: 60,
-  //     carbohydrates: 10,
-  //     fat: 2,
-  //     proteins: 1
-  //   }
-  // ];
 
   const ingredients = useSelector(selectIngredients);
 
