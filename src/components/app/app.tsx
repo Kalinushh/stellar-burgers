@@ -32,14 +32,14 @@ const App = () => {
   const navigate = useNavigate();
 
   // Определяем, есть ли "фон" для модального отображения
-  const previousLocation = location.state?.backgroundLocation || null;
+  const backgroundLocation = location.state?.background;
 
   return (
     <div className={styles.app}>
       <AppHeader />
 
       {/* Основные маршруты */}
-      <Routes location={previousLocation || location}>
+      <Routes location={backgroundLocation || location}>
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
 
@@ -112,7 +112,7 @@ const App = () => {
       </Routes>
 
       {/* Модальные окна (если переход был изнутри приложения) */}
-      {previousLocation && (
+      {backgroundLocation && (
         <Routes>
           <Route
             path='/ingredients/:id'

@@ -33,6 +33,11 @@ const constructorSlice = createSlice({
           }
         };
       }
+    },
+    removeIngredient: (state, action: PayloadAction<string>) => {
+      state.ingredients = state.ingredients.filter(
+        (item) => item.id !== action.payload
+      );
     }
   }
 });
