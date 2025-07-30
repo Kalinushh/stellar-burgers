@@ -9,14 +9,12 @@ import {
 import { TTabMode, TIngredient } from '@utils-types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
 
-
 export const BurgerIngredients: FC = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchIngredients());
   }, [dispatch]);
-
 
   const ingredients = useSelector(selectIngredients);
 

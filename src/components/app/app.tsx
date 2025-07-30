@@ -1,4 +1,10 @@
-import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import {
+  Routes,
+  Route,
+  useLocation,
+  useNavigate,
+  Navigate
+} from 'react-router-dom';
 import {
   ConstructorPage,
   Feed,
@@ -15,6 +21,9 @@ import { AppHeader, Modal, IngredientDetails, OrderInfo } from '@components';
 
 import styles from './app.module.css';
 import '../../index.css';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from '../../services/store';
+import { userActions, userSelectors } from '../../slices/userSlice';
 
 import { ReactNode } from 'react';
 type ProtectedRouteProps = {
@@ -22,28 +31,56 @@ type ProtectedRouteProps = {
   onlyUnAuth?: boolean;
 };
 
-const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  // Заглушка — всегда пропускает
+const ProtectedRoute = ({ children, onlyUnAuth }: ProtectedRouteProps) => {
+  const isAuthChecked = useSelector(userSelectors.selectIsAuthChecked);
+  const isAuthenticated = useSelector(userSelectors.selectIsAuthenticated);
+  const location = useLocation();
+
+  if (!isAuthChecked) return null;
+
+  if (onlyUnAuth && isAuthenticated) {
+    return <Navigate to='/' replace />;
+  }
+
+  if (!onlyUnAuth && !isAuthenticated) {
+    return <Navigate to='/login' state={{ from: location }} replace />;
+  }
+
   return children;
 };
 
 const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  // Определяем, есть ли "фон" для модального отображения
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+    const userData = localStorage.getItem('user');
+
+    if (accessToken && userData) {
+      try {
+        dispatch(userActions.setUser(JSON.parse(userData)));
+      } catch {
+        dispatch(userActions.setAuthChecked(true));
+      }
+    } else {
+      dispatch(userActions.setAuthChecked(true));
+    }
+  }, []);
+
   const backgroundLocation = location.state?.background;
 
   return (
     <div className={styles.app}>
       <AppHeader />
 
-      {/* Основные маршруты */}
+      {}
       <Routes location={backgroundLocation || location}>
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
 
-        {/* Роуты только для НЕавторизованных */}
+        {}
         <Route
           path='/login'
           element={
@@ -77,7 +114,7 @@ const App = () => {
           }
         />
 
-        {/* Роуты только для авторизованных */}
+        {}
         <Route
           path='/profile'
           element={
@@ -95,7 +132,7 @@ const App = () => {
           }
         />
 
-        {/* Отдельные страницы (если перешли напрямую по ссылке) */}
+        {}
         <Route path='/ingredients/:id' element={<IngredientDetails />} />
         <Route path='/feed/:number' element={<OrderInfo />} />
         <Route
@@ -107,11 +144,11 @@ const App = () => {
           }
         />
 
-        {/* 404 */}
+        {}
         <Route path='*' element={<NotFound404 />} />
       </Routes>
 
-      {/* Модальные окна (если переход был изнутри приложения) */}
+      {}
       {backgroundLocation && (
         <Routes>
           <Route
