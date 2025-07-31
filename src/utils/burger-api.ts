@@ -112,7 +112,6 @@ export const getOrdersApi = () => {
       authorization: token
     } as HeadersInit
   }).then((data) => {
-
     if (data?.success) return data.orders;
     return Promise.reject(data);
   });

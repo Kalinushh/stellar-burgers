@@ -65,6 +65,10 @@ const constructorSlice = createSlice({
     clearOrder: (state) => {
       state.orderRequest = false;
       state.orderModalData = null;
+    },
+    clearConstructor: (state) => {
+      state.bun = null;
+      state.ingredients = [];
     }
   },
 
