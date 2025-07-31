@@ -5,7 +5,8 @@ import {
   TLoginData,
   registerUserApi,
   TRegisterData,
-  updateUserApi
+  updateUserApi,
+  getUserApi
 } from '../utils/burger-api';
 
 type UserState = {
@@ -25,6 +26,7 @@ export const loginUser = createAsyncThunk(
 
       localStorage.setItem('refreshToken', response.refreshToken);
       localStorage.setItem('user', JSON.stringify(response.user));
+      document.cookie = 'accessToken=; Max-Age=0';
       document.cookie = `accessToken=${response.accessToken}`;
 
       return response.user;
@@ -45,6 +47,7 @@ export const registerUser = createAsyncThunk(
 
       localStorage.setItem('refreshToken', response.refreshToken);
       localStorage.setItem('user', JSON.stringify(response.user));
+      document.cookie = 'accessToken=; Max-Age=0';
       document.cookie = `accessToken=${response.accessToken}`;
 
       return response.user;
@@ -53,6 +56,18 @@ export const registerUser = createAsyncThunk(
         return rejectWithValue((error as { message: string }).message);
       }
       return rejectWithValue('Ошибка регистрации');
+    }
+  }
+);
+
+export const checkAuth = createAsyncThunk(
+  'user/checkAuth',
+  async (_, thunkAPI) => {
+    try {
+      const response = await getUserApi();
+      return response.user;
+    } catch (err) {
+      return thunkAPI.rejectWithValue('Пользователь не авторизован');
     }
   }
 );
@@ -107,6 +122,17 @@ export const userSlice = createSlice({
       })
       .addCase(updateUser.fulfilled, (state, action: PayloadAction<TUser>) => {
         state.user = action.payload;
+      })
+      .addCase(checkAuth.pending, (state) => {
+        state.isAuthChecked = false;
+      })
+      .addCase(checkAuth.fulfilled, (state, action: PayloadAction<TUser>) => {
+        state.user = action.payload;
+        state.isAuthChecked = true;
+      })
+      .addCase(checkAuth.rejected, (state) => {
+        state.user = null;
+        state.isAuthChecked = true;
       });
   }
 });

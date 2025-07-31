@@ -1,71 +1,55 @@
 import { FC, useMemo } from 'react';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
-import { useSelector } from '../../services/store';
-import { selectBun, selectIngredients } from '../../slices/constructorSlice';
+import { useSelector, useDispatch } from '../../services/store';
+import {
+  selectBun,
+  selectIngredients,
+  selectOrderRequest,
+  selectOrderModalData,
+  orderBurger,
+  constructorActions
+} from '../../slices/constructorSlice';
+import { userSelectors } from '../../slices/userSlice';
 
 export const BurgerConstructor: FC = () => {
   /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
+  const dispatch = useDispatch();
   const bun = useSelector(selectBun);
   const ingredients = useSelector(selectIngredients);
 
   const constructorItems = {
     bun: bun ?? null,
     ingredients: ingredients ?? []
-    // bun: {
-    //   _id: 'bun123',
-    //   id: 'local-bun-id',
-    //   name: 'Булка N',
-    //   type: 'bun',
-    //   price: 50,
-    //   image: 'https://via.placeholder.com/100x40',
-    //   image_mobile: 'https://via.placeholder.com/50x30',
-    //   image_large: 'https://via.placeholder.com/200x100',
-    //   calories: 100,
-    //   carbohydrates: 10,
-    //   fat: 5,
-    //   proteins: 7
-    // },
-    // ingredients: [
-    //   {
-    //     _id: 'main456',
-    //     id: 'local-main-id-1',
-    //     name: 'Котлета говяжья',
-    //     type: 'main',
-    //     price: 80,
-    //     image: 'https://via.placeholder.com/100x40',
-    //     image_mobile: 'https://via.placeholder.com/50x30',
-    //     image_large: 'https://via.placeholder.com/200x100',
-    //     calories: 150,
-    //     carbohydrates: 5,
-    //     fat: 10,
-    //     proteins: 20
-    //   },
-    //   {
-    //     _id: 'sauce789',
-    //     id: 'local-sauce-id-1',
-    //     name: 'Соус острый',
-    //     type: 'sauce',
-    //     price: 30,
-    //     image: 'https://via.placeholder.com/100x40',
-    //     image_mobile: 'https://via.placeholder.com/50x30',
-    //     image_large: 'https://via.placeholder.com/200x100',
-    //     calories: 50,
-    //     carbohydrates: 2,
-    //     fat: 4,
-    //     proteins: 1
-    //   }
-    // ]
   };
 
-  const orderRequest = false;
+  const orderRequest = useSelector(selectOrderRequest);
 
-  const orderModalData = null;
+  const orderModalData = useSelector(selectOrderModalData);
+
+  const isAuth = useSelector(userSelectors.selectIsAuthenticated);
 
   const onOrderClick = () => {
+    console.log('[DEBUG] accessToken:', document.cookie);
     if (!constructorItems.bun || orderRequest) return;
+
+    if (!isAuth) {
+      alert('Авторизуйтесь, чтобы оформить заказ');
+      return;
+    }
+
+    const ingredientIds = [
+      constructorItems.bun._id,
+      ...constructorItems.ingredients.map((item) => item._id),
+      constructorItems.bun._id
+    ];
+
+    dispatch(orderBurger(ingredientIds));
   };
-  const closeOrderModal = () => {};
+  const closeOrderModal = () => {
+    dispatch(constructorActions.clearOrder());
+  };
+
   // const price = 0;
 
   const price = useMemo(

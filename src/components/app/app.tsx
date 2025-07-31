@@ -23,7 +23,7 @@ import styles from './app.module.css';
 import '../../index.css';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from '../../services/store';
-import { userActions, userSelectors } from '../../slices/userSlice';
+import { userActions, userSelectors, checkAuth } from '../../slices/userSlice';
 
 import { ReactNode } from 'react';
 type ProtectedRouteProps = {
@@ -54,20 +54,24 @@ const App = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken');
-    const userData = localStorage.getItem('user');
+  // useEffect(() => {
+  //   const accessToken = localStorage.getItem('accessToken');
+  //   const userData = localStorage.getItem('user');
+  //
+  //   if (accessToken && userData) {
+  //     try {
+  //       dispatch(userActions.setUser(JSON.parse(userData)));
+  //     } catch {
+  //       dispatch(userActions.setAuthChecked(true));
+  //     }
+  //   } else {
+  //     dispatch(userActions.setAuthChecked(true));
+  //   }
+  // }, []);
 
-    if (accessToken && userData) {
-      try {
-        dispatch(userActions.setUser(JSON.parse(userData)));
-      } catch {
-        dispatch(userActions.setAuthChecked(true));
-      }
-    } else {
-      dispatch(userActions.setAuthChecked(true));
-    }
-  }, []);
+  useEffect(() => {
+    dispatch(checkAuth());
+  }, [dispatch]);
 
   const backgroundLocation = location.state?.background;
 
@@ -171,7 +175,10 @@ const App = () => {
             path='/profile/orders/:number'
             element={
               <ProtectedRoute>
-                <Modal title='Ваш заказ' onClose={() => navigate(-1)}>
+                <Modal
+                  title='Ваш заказ'
+                  onClose={() => navigate('/profile/orders')}
+                >
                   <OrderInfo />
                 </Modal>
               </ProtectedRoute>
