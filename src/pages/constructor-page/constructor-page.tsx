@@ -25,6 +25,8 @@ export const ConstructorPage: FC = () => {
           <div className={`${styles.main} pl-5 pr-5`}>
             <BurgerIngredients />
             <BurgerConstructor />
+            {/*<section>Здесь будет список ингредиентов</section>*/}
+            {/*<section>Здесь будет сборка бургера</section>*/}
           </div>
         </main>
       )}

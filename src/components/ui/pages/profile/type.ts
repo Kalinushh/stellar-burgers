@@ -11,4 +11,10 @@ export type ProfileUIProps = {
   handleCancel: (e: SyntheticEvent) => void;
   handleInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
   updateUserError?: string;
+  isNameEditable: boolean;
+  isEmailEditable: boolean;
+  isPasswordEditable: boolean;
+  setIsNameEditable: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsEmailEditable: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsPasswordEditable: React.Dispatch<React.SetStateAction<boolean>>;
 };
