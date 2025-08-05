@@ -24,30 +24,12 @@ import '../../index.css';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from '../../services/store';
 import { userActions, userSelectors, checkAuth } from '../../slices/userSlice';
+import { fetchIngredients } from '../../slices/ingredientsSlice';
 
 import { ReactNode } from 'react';
-type ProtectedRouteProps = {
-  children: ReactNode;
-  onlyUnAuth?: boolean;
-};
+import ProtectedRoute from '../protected-route/protected-route';
 
-const ProtectedRoute = ({ children, onlyUnAuth }: ProtectedRouteProps) => {
-  const isAuthChecked = useSelector(userSelectors.selectIsAuthChecked);
-  const isAuthenticated = useSelector(userSelectors.selectIsAuthenticated);
-  const location = useLocation();
 
-  if (!isAuthChecked) return null;
-
-  if (onlyUnAuth && isAuthenticated) {
-    return <Navigate to='/' replace />;
-  }
-
-  if (!onlyUnAuth && !isAuthenticated) {
-    return <Navigate to='/login' state={{ from: location }} replace />;
-  }
-
-  return children;
-};
 
 const App = () => {
   const location = useLocation();
@@ -71,6 +53,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(checkAuth());
+    dispatch(fetchIngredients());
   }, [dispatch]);
 
   const backgroundLocation = location.state?.background;
@@ -88,7 +71,7 @@ const App = () => {
         <Route
           path='/login'
           element={
-            <ProtectedRoute onlyUnAuth>
+            <ProtectedRoute anonymous>
               <Login />
             </ProtectedRoute>
           }
@@ -96,7 +79,7 @@ const App = () => {
         <Route
           path='/register'
           element={
-            <ProtectedRoute onlyUnAuth>
+            <ProtectedRoute anonymous>
               <Register />
             </ProtectedRoute>
           }
@@ -104,7 +87,7 @@ const App = () => {
         <Route
           path='/forgot-password'
           element={
-            <ProtectedRoute onlyUnAuth>
+            <ProtectedRoute anonymous>
               <ForgotPassword />
             </ProtectedRoute>
           }
@@ -112,7 +95,7 @@ const App = () => {
         <Route
           path='/reset-password'
           element={
-            <ProtectedRoute onlyUnAuth>
+            <ProtectedRoute anonymous>
               <ResetPassword />
             </ProtectedRoute>
           }

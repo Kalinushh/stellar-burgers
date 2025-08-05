@@ -11,12 +11,15 @@ import {
   constructorActions
 } from '../../slices/constructorSlice';
 import { userSelectors } from '../../slices/userSlice';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export const BurgerConstructor: FC = () => {
   /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
   const dispatch = useDispatch();
   const bun = useSelector(selectBun);
   const ingredients = useSelector(selectIngredients);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const constructorItems = {
     bun: bun ?? null,
@@ -34,7 +37,9 @@ export const BurgerConstructor: FC = () => {
     if (!constructorItems.bun || orderRequest) return;
 
     if (!isAuth) {
-      alert('Авторизуйтесь, чтобы оформить заказ');
+      navigate('/login', {
+        state: { from: location }
+      });
       return;
     }
 

@@ -6,7 +6,6 @@ import {
   fetchUserOrders,
   selectUserOrders
 } from '../../slices/profileOrdersSlice';
-import { fetchIngredients } from '../../slices/ingredientsSlice';
 
 export const ProfileOrders: FC = () => {
   /** TODO: взять переменную из стора */
@@ -14,7 +13,6 @@ export const ProfileOrders: FC = () => {
   const orders: TOrder[] = useSelector(selectUserOrders);
   useEffect(() => {
     dispatch(fetchUserOrders());
-    dispatch(fetchIngredients());
   }, []);
 
   return <ProfileOrdersUI orders={orders} />;

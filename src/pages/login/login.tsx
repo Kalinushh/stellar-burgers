@@ -1,21 +1,23 @@
 import { FC, SyntheticEvent, useState, useEffect } from 'react';
 import { LoginUI } from '@ui-pages';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from '../../services/store';
 import { loginUser } from '../../slices/userSlice';
 
 export const Login: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorText, setErrorText] = useState('');
+  const from = location.state?.from?.pathname || '/';
 
   const isAuth = useSelector((state) => state.user.user !== null);
 
   useEffect(() => {
     if (isAuth) {
-      navigate('/', { replace: true });
+      navigate(from, { replace: true });
     }
   }, [isAuth]);
 
