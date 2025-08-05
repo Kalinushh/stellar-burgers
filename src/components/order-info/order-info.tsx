@@ -1,19 +1,35 @@
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useEffect } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
 import { useParams, useLocation } from 'react-router-dom';
-import { useSelector } from '../../services/store';
+import { useSelector, useDispatch } from '../../services/store';
+import { fetchFeed } from '../../slices/feedSlice';
+import { fetchUserOrders } from '../../slices/profileOrdersSlice';
+
 export const OrderInfo: FC = () => {
   const { number } = useParams();
   const location = useLocation();
+  const dispatch = useDispatch();
+  const isProfile = location.pathname.startsWith('/profile/orders');
 
-  const orders = location.pathname.startsWith('/profile/orders')
-    ? useSelector((state) => state.profileOrders.orders)
-    : useSelector((state) => state.feed.orders);
+  const orders = useSelector((state) =>
+    isProfile ? state.profileOrders.orders : state.feed.orders
+  );
+
+  useEffect(() => {
+    if (!orders.length) {
+      if (isProfile) {
+        dispatch(fetchUserOrders());
+      } else {
+        dispatch(fetchFeed());
+      }
+    }
+  }, [dispatch, isProfile, orders.length]);
 
   // const orders = useSelector((state) => state.feed.orders);
   const ingredients = useSelector((state) => state.ingredients.items);
+
 
   const orderData = orders.find((item) => item.number === Number(number));
 
