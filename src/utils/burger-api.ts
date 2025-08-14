@@ -30,8 +30,11 @@ export const refreshToken = (): Promise<TRefreshResponse> =>
       if (!refreshData.success) {
         return Promise.reject(refreshData);
       }
+      document.cookie = 'accessToken=; Max-Age=0';
+
+      // обновить токены
       localStorage.setItem('refreshToken', refreshData.refreshToken);
-      setCookie('accessToken', refreshData.accessToken);
+      document.cookie = `accessToken=${refreshData.accessToken}`;
       return refreshData;
     });
 
@@ -68,7 +71,9 @@ type TFeedsResponse = TServerResponse<{
 }>;
 
 type TOrdersResponse = TServerResponse<{
-  data: TOrder[];
+  orders: TOrder[];
+  total: number;
+  totalToday: number;
 }>;
 
 export const getIngredientsApi = () =>
@@ -83,21 +88,34 @@ export const getFeedsApi = () =>
   fetch(`${URL}/orders/all`)
     .then((res) => checkResponse<TFeedsResponse>(res))
     .then((data) => {
-      if (data?.success) return data;
+      if (data?.success) {
+        return {
+          orders: data.orders,
+          total: data.total,
+          totalToday: data.totalToday
+        };
+      }
       return Promise.reject(data);
+    })
+    .catch((err) => {
+      console.error('[ERROR] getFeedsApi fail:', err);
+      throw err;
     });
 
-export const getOrdersApi = () =>
-  fetchWithRefresh<TFeedsResponse>(`${URL}/orders`, {
+export const getOrdersApi = () => {
+  const token = getCookie('accessToken');
+
+  return fetchWithRefresh<TOrdersResponse>(`${URL}/orders`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
-      authorization: getCookie('accessToken')
+      authorization: token
     } as HeadersInit
   }).then((data) => {
     if (data?.success) return data.orders;
     return Promise.reject(data);
   });
+};
 
 type TNewOrderResponse = TServerResponse<{
   order: TOrder;

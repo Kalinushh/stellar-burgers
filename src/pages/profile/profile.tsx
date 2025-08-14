@@ -1,26 +1,31 @@
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
+import { useSelector, useDispatch } from '../../services/store';
+import { userSelectors, updateUser } from '../../slices/userSlice';
 
 export const Profile: FC = () => {
-  /** TODO: взять переменную из стора */
-  const user = {
-    name: '',
-    email: ''
-  };
+  const dispatch = useDispatch();
+  const user = useSelector(userSelectors.selectUser);
 
   const [formValue, setFormValue] = useState({
-    name: user.name,
-    email: user.email,
+    name: '',
+    email: '',
     password: ''
   });
 
+  const [isNameEditable, setIsNameEditable] = useState(false);
+  const [isEmailEditable, setIsEmailEditable] = useState(false);
+  const [isPasswordEditable, setIsPasswordEditable] = useState(false);
+
   useEffect(() => {
-    setFormValue((prevState) => ({
-      ...prevState,
-      name: user?.name || '',
-      email: user?.email || ''
-    }));
-  }, [user]);
+    if (user) {
+      setFormValue((prev) => ({
+        ...prev,
+        name: user.name,
+        email: user.email
+      }));
+    }
+  }, [user?.name, user?.email]);
 
   const isFormChanged =
     formValue.name !== user?.name ||
@@ -29,15 +34,31 @@ export const Profile: FC = () => {
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
+    dispatch(
+      updateUser({
+        name: formValue.name,
+        email: formValue.email,
+        password: formValue.password || undefined
+      })
+    );
+    setIsNameEditable(false);
+    setIsEmailEditable(false);
+    setIsPasswordEditable(false);
+    setFormValue((prev) => ({ ...prev, password: '' }));
   };
 
   const handleCancel = (e: SyntheticEvent) => {
     e.preventDefault();
-    setFormValue({
-      name: user.name,
-      email: user.email,
-      password: ''
-    });
+    if (user) {
+      setFormValue({
+        name: user.name,
+        email: user.email,
+        password: ''
+      });
+    }
+    setIsNameEditable(false);
+    setIsEmailEditable(false);
+    setIsPasswordEditable(false);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,8 +75,12 @@ export const Profile: FC = () => {
       handleCancel={handleCancel}
       handleSubmit={handleSubmit}
       handleInputChange={handleInputChange}
+      isNameEditable={isNameEditable}
+      isEmailEditable={isEmailEditable}
+      isPasswordEditable={isPasswordEditable}
+      setIsNameEditable={setIsNameEditable}
+      setIsEmailEditable={setIsEmailEditable}
+      setIsPasswordEditable={setIsPasswordEditable}
     />
   );
-
-  return null;
 };
