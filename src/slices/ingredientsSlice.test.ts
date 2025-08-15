@@ -1,9 +1,7 @@
 /// <reference types="jest" />
 import { describe, it, expect } from '@jest/globals';
 export {};
-import ingredientsReducer, {
-  fetchIngredients
-} from './ingredientsSlice';
+import ingredientsReducer, { fetchIngredients } from './ingredientsSlice';
 
 import { TIngredient } from '@utils-types';
 

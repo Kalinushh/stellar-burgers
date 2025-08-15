@@ -42,6 +42,25 @@ describe('Бургер конструктор — UI и логика', () => {
     cy.contains('Краторная булка N-200i').should('exist');
   });
 
+  it('Добавление ингредиента в конструктор', () => {
+    cy.contains(/Выберите\s+булки/i).should('exist');
+    cy.contains('Краторная булка N-200i')
+      .parents('li')
+      .within(() => {
+        cy.contains('Добавить').click();
+      });
+    cy.contains(/Выберите\s+булки/i).should('not.exist');
+    cy.contains('Краторная булка N-200i').should('exist');
+    cy.contains(/Выберите\s+начинку/i).should('exist');
+    cy.contains('Филе Люминесцентного тетраодонтимформа')
+      .parents('li')
+      .within(() => {
+        cy.contains('Добавить').click();
+      });
+    cy.contains(/Выберите\s+начинку/i).should('not.exist');
+    cy.contains('Филе Люминесцентного тетраодонтимформа').should('exist');
+  });
+
 
   it('Сборка и заказ бургера', () => {
     cy.contains('Краторная булка N-200i')

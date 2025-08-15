@@ -96,7 +96,9 @@
     "lint:fix": "npm run lint -- --fix",
     "format": "prettier ./src --write",
     "prepare": "husky install",
-    "test": "jest"
+    "test": "jest",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run --browser chrome --headless"
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx}": [

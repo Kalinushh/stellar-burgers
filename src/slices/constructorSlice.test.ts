@@ -26,23 +26,33 @@ const testBun: TIngredient = {
 
 describe('constructorSlice reducer', () => {
   it('добавляет булку', () => {
-    const state = constructorReducer(undefined, constructorActions.addIngredient(testBun));
+    const state = constructorReducer(
+      undefined,
+      constructorActions.addIngredient(testBun)
+    );
     expect(state.bun).toEqual(expect.objectContaining({ _id: 'bun-1' }));
   });
 
   it('добавляет ингредиент (не булку)', () => {
-    const state = constructorReducer(undefined, constructorActions.addIngredient(testIngredient));
+    const state = constructorReducer(
+      undefined,
+      constructorActions.addIngredient(testIngredient)
+    );
     expect(state.ingredients.length).toBe(1);
     expect(state.ingredients[0]._id).toBe('123');
   });
 
   it('удаляет ингредиент по id', () => {
-    const ingredientWithId = constructorActions.addIngredient(testIngredient).payload;
+    const ingredientWithId =
+      constructorActions.addIngredient(testIngredient).payload;
     const withIngredient = constructorReducer(undefined, {
       type: constructorActions.addIngredient.type,
       payload: ingredientWithId
     });
-    const state = constructorReducer(withIngredient, constructorActions.removeIngredient(ingredientWithId.id));
+    const state = constructorReducer(
+      withIngredient,
+      constructorActions.removeIngredient(ingredientWithId.id)
+    );
     expect(state.ingredients).toHaveLength(0);
   });
 
@@ -53,7 +63,10 @@ describe('constructorSlice reducer', () => {
       orderRequest: false,
       orderModalData: null
     };
-    const state = constructorReducer(withStuff, constructorActions.clearConstructor());
+    const state = constructorReducer(
+      withStuff,
+      constructorActions.clearConstructor()
+    );
     expect(state.bun).toBeNull();
     expect(state.ingredients).toHaveLength(0);
   });
@@ -65,7 +78,10 @@ describe('constructorSlice reducer', () => {
       orderRequest: false,
       orderModalData: { number: 123 }
     };
-    const state = constructorReducer(withOrder, constructorActions.clearOrder());
+    const state = constructorReducer(
+      withOrder,
+      constructorActions.clearOrder()
+    );
     expect(state.orderModalData).toBeNull();
     expect(state.orderRequest).toBe(false);
   });
