@@ -30,7 +30,6 @@ export const OrderInfo: FC = () => {
   // const orders = useSelector((state) => state.feed.orders);
   const ingredients = useSelector((state) => state.ingredients.items);
 
-
   const orderData = orders.find((item) => item.number === Number(number));
 
   const orderInfo = useMemo(() => {

@@ -29,8 +29,6 @@ import { fetchIngredients } from '../../slices/ingredientsSlice';
 import { ReactNode } from 'react';
 import ProtectedRoute from '../protected-route/protected-route';
 
-
-
 const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
